@@ -3,7 +3,61 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail, MessageCircle, Check } from 'lucide-react';
-import { isValidEmail, isValidPhone, americanCountries } from '@/lib/supabase';
+
+// Países de América con sus códigos
+const americanCountries = [
+  { code: '+1', name: 'Estados Unidos / Canadá', flag: '🇺🇸' },
+  { code: '+52', name: 'México', flag: '🇲🇽' },
+  { code: '+54', name: 'Argentina', flag: '🇦🇷' },
+  { code: '+55', name: 'Brasil', flag: '🇧🇷' },
+  { code: '+56', name: 'Chile', flag: '🇨🇱' },
+  { code: '+57', name: 'Colombia', flag: '🇨🇴' },
+  { code: '+58', name: 'Venezuela', flag: '🇻🇪' },
+  { code: '+51', name: 'Perú', flag: '🇵🇪' },
+  { code: '+593', name: 'Ecuador', flag: '🇪🇨' },
+  { code: '+595', name: 'Paraguay', flag: '🇵🇾' },
+  { code: '+598', name: 'Uruguay', flag: '🇺🇾' },
+  { code: '+591', name: 'Bolivia', flag: '🇧🇴' },
+  { code: '+592', name: 'Guyana', flag: '🇬🇾' },
+  { code: '+597', name: 'Suriname', flag: '🇸🇷' },
+  { code: '+594', name: 'Guayana Francesa', flag: '🇬🇫' },
+];
+
+// Validación de email
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Validación de teléfono
+function isValidPhone(phone: string, countryCode: string): boolean {
+  const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+  
+  if (!/^\d+$/.test(cleanPhone)) {
+    return false;
+  }
+
+  const validations: { [key: string]: RegExp } = {
+    '+1': /^\d{10}$/,
+    '+52': /^\d{10}$/,
+    '+54': /^\d{10}$/,
+    '+55': /^\d{11}$/,
+    '+56': /^\d{9}$/,
+    '+57': /^\d{10}$/,
+    '+58': /^\d{10}$/,
+    '+51': /^\d{9}$/,
+    '+593': /^\d{9}$/,
+    '+595': /^\d{9}$/,
+    '+598': /^\d{8}$/,
+    '+591': /^\d{8}$/,
+    '+592': /^\d{7}$/,
+    '+597': /^\d{7}$/,
+    '+594': /^\d{9}$/,
+  };
+
+  const validation = validations[countryCode];
+  return validation ? validation.test(cleanPhone) : false;
+}
 
 const messages = [
   {
@@ -654,7 +708,7 @@ function AnalysisSection() {
   );
 }
 
-// Waitlist Component - Conecta a API
+// Waitlist Component - Solo webhook, sin Supabase
 function WaitlistSection() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
