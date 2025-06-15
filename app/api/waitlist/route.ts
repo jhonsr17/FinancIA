@@ -59,11 +59,9 @@ async function sendToN8nWebhook(data: {
   console.log('Webhook status:', response.status);
   console.log('Webhook body:', responseText);
   
-  if (!response.ok) {
-    throw new Error(Webhook error: ${response.status} - ${responseText});
-  }
 
   if (!response.ok) {
+    // Línea 63 corregida
     throw new Error(`Webhook error: ${response.status} - ${responseText}`);
   }
 }
