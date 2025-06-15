@@ -56,7 +56,12 @@ async function sendToN8nWebhook(data: {
 
   // Opcional para debug
   const responseText = await response.text();
-  console.log('Respuesta del webhook:', responseText);
+  console.log('Webhook status:', response.status);
+  console.log('Webhook body:', responseText);
+  
+  if (!response.ok) {
+    throw new Error(Webhook error: ${response.status} - ${responseText});
+  }
 
   if (!response.ok) {
     throw new Error(`Webhook error: ${response.status} - ${responseText}`);
